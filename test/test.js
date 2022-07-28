@@ -1,10 +1,8 @@
-const ThreadPool = require( "../build/main.js").default;
+const {default: ThreadPool, ThreadPoolStatus} = require( "../build/main.js");
 const os = require( "os");
-// const {fileURLToPath} = require( 'url');
-const {dirname, join} = require( 'path');
-//
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
+const { join } = require( 'path');
+
+console.log(ThreadPoolStatus.RUNNING,ThreadPoolStatus.SHUTDOWN,ThreadPoolStatus.TERMINATED)
 
 const cpus = os.cpus().length;
 let max = 1e7
@@ -18,7 +16,7 @@ for (let i = 0; i < cpus; i++) {
   const queue = {
     callback: (err, res) => {
       if (err) {
-        throw err
+        console.error(err)
       }
       params = params.concat(res);
     }, // 回调函数

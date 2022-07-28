@@ -9,7 +9,7 @@ function threadFactory(filePath, isTemp, exitCallback) {
         console.log(`======= worker id: {${workerId}} online ======`);
     });
     worker.on("message", (res) => {
-        console.log(`======log: worker: ${workerId} send message ${JSON.stringify(res.length)}======`);
+        console.log(`======log: worker: ${workerId} send message ${JSON.stringify(res)}======`);
     });
     worker.on("error", (err) => {
         console.error(`======= worker id: {${workerId}} error ======`, err);

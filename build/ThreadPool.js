@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ThreadPoolStatus = void 0;
 const threadFactory_1 = __importDefault(require("./threadFactory"));
 // 线程池状态
 var ThreadPoolStatus;
@@ -10,7 +11,7 @@ var ThreadPoolStatus;
     ThreadPoolStatus[ThreadPoolStatus["RUNNING"] = 0] = "RUNNING";
     ThreadPoolStatus[ThreadPoolStatus["SHUTDOWN"] = 1] = "SHUTDOWN";
     ThreadPoolStatus[ThreadPoolStatus["TERMINATED"] = 2] = "TERMINATED"; // 执行terminated方法后进入该状态
-})(ThreadPoolStatus || (ThreadPoolStatus = {}));
+})(ThreadPoolStatus = exports.ThreadPoolStatus || (exports.ThreadPoolStatus = {}));
 // 线程状态
 var workerStatus;
 (function (workerStatus) {
@@ -44,6 +45,9 @@ class ThreadPoolImpl {
         this.corePoolSize = maxThread;
         this.maximumPoolSize = maximumPoolSize !== null && maximumPoolSize !== void 0 ? maximumPoolSize : maxThread;
         this._init();
+    }
+    set fileUrl(value) {
+        throw new Error("Can not change fileUrl");
     }
     get fileUrl() {
         return this._fileUrl;
@@ -80,6 +84,7 @@ class ThreadPoolImpl {
         };
         // 闲置常驻线程
         const freePremWorker = [];
+        const runningWorker = [];
         for (const key in this._workers) {
             if (this._workers[key].status === workerStatus.RUNNING) {
                 num.all++;
@@ -89,6 +94,7 @@ class ThreadPoolImpl {
                 else {
                     num.prem++;
                 }
+                runningWorker.push(this._workers[key]);
             }
             else {
                 // 获取所有闲置常驻线程
@@ -97,11 +103,12 @@ class ThreadPoolImpl {
                 }
             }
         }
-        return { num, freePremWorker };
+        return { num, freePremWorker, runningWorker };
     }
     run(data) {
         if (this.status !== ThreadPoolStatus.RUNNING) {
-            console.error(new Error("Not accepting new tasks"));
+            // console.error(new Error("Not accepting new tasks"))
+            data.callback(new Error("Not accepting new tasks"));
             return;
         }
         let { num, freePremWorker } = this.getWorkerInfo();
@@ -117,7 +124,12 @@ class ThreadPoolImpl {
         }
         // 如果全部运行数量和最大弹性线程数相等 加入阻塞队列
         else {
-            this._workQueue.push(data);
+            if (this._maxWorkQueue && this._maxWorkQueue > 0 && this._maxWorkQueue < this._workQueue.length) {
+                this._workQueue.push(data);
+            }
+            else {
+                data.callback(new Error("Task queue is full"));
+            }
         }
     }
     _runWorker(workerInfo, data) {

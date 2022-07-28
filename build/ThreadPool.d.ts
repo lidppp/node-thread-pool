@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import tF from "./threadFactory";
 import { Worker } from "worker_threads";
-declare enum ThreadPoolStatus {
+export declare enum ThreadPoolStatus {
     RUNNING = 0,
     SHUTDOWN = 1,
     TERMINATED = 2
@@ -48,6 +48,7 @@ interface ThreadPoolType<T, N> {
             temp: number;
         };
         freePremWorker: WorkerInfo<N>[];
+        runningWorker: WorkerInfo<N>[];
     };
     _creatWorker(isTemp: boolean): number;
     _runWorker(workerInfo: WorkerInfo<N>, data: QueueItem<T, N>): void;
@@ -55,6 +56,7 @@ interface ThreadPoolType<T, N> {
 }
 declare class ThreadPoolImpl<T, N> implements ThreadPoolType<T, N> {
     _fileUrl: string;
+    set fileUrl(value: string);
     get fileUrl(): string;
     corePoolSize: number;
     maximumPoolSize: number;
@@ -77,6 +79,7 @@ declare class ThreadPoolImpl<T, N> implements ThreadPoolType<T, N> {
             temp: number;
         };
         freePremWorker: WorkerInfo<N>[];
+        runningWorker: WorkerInfo<N>[];
     };
     run(data: QueueItem<T, N>): void;
     _runWorker(workerInfo: WorkerInfo<N>, data: QueueItem<T, N>): void;

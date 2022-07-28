@@ -2,7 +2,7 @@ import tF from "./threadFactory"
 import {Worker} from "worker_threads";
 
 // 线程池状态
-enum ThreadPoolStatus {
+export enum ThreadPoolStatus {
     RUNNING, // 能接受新提交的任务也能处理阻塞队列中的任务
     SHUTDOWN, // 关闭状态, 不接受新提交的任务, 却可以继续处理阻塞队列中已保存的任务, 阻塞任务处理完成后进入 TERMINATED状态
     TERMINATED// 执行terminated方法后进入该状态

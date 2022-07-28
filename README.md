@@ -3,6 +3,7 @@
 使用方式
 
 ```js
+const {default: tp, ThreadPoolStatus} = require("thread-pool")
 const tp = new ThreadPool("FilePath", 4, 8)
 // 注意 需要传入该格式的数据
 const queue = {
@@ -76,6 +77,7 @@ enum ThreadPoolStatus {
     SHUTDOWN, // 关闭状态, 不接受新提交的任务, 却可以继续处理阻塞队列中已保存的任务, 阻塞任务处理完成后进入 TERMINATED状态
     TERMINATED// 执行terminated方法后进入该状态
 }
+
 ```
 
 ### run(data: QueueItem<T, N>):void
