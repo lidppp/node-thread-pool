@@ -39,7 +39,7 @@ parentPort.on("message", (data) => {
 
 type: `constructor(fileUrl: string, maxThread: number, maximumPoolSize?: number):void`
 
-- fileUrl   线程打开文件路径, 注意请使用path.join(__dirname, "path")进行拼接完整路径,fileUrl不可修改在对象实例化后无法修改
+- fileUrl   线程打开文件路径, 注意请使用path.join(__dirname, "path")进行拼接完整路径,fileUrl在对象实例化后无法修改
 
 - maxThread 核心线程数, 核心线程为不会被销毁, 无任务时挂起的线程, 必须大于0
 
@@ -61,7 +61,7 @@ type: `constructor(fileUrl: string, maxThread: number, maximumPoolSize?: number)
 
 [ number ] \<readonly> 只读 最大线程数
 
-默认为maxThread
+如果不传, 默认为maxThread
 
 最大线程数-核心线程数 = 弹性线程数量, 任务密集时会创建弹性线程, 弹性线程, 用完即杀, 不会保留
 
