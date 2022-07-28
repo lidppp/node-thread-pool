@@ -8,7 +8,7 @@ const cpus = os.cpus().length;
 let max = 1e7
 let min = 2
 let params = []
-const tp = new ThreadPool(join(__dirname, "./test1.js"), cpus - 2, cpus)
+const tp = new ThreadPool(join(__dirname, "./test-child.js"), cpus - 2, cpus)
 
 const baseStep = Math.ceil((max - min) / cpus)
 let start = min
